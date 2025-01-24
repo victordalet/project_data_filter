@@ -17,6 +17,12 @@ export PYTHONPATH=$(pwd)/src:$(pwd)
 python src/main.py
 ```
 
+## Run with docker
+
+```bash
+docker compose up -d
+```
+
 
 ## Run create data
 
