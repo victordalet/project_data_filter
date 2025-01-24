@@ -1,5 +1,7 @@
 import pandas as pd
 import streamlit as st
+
+from src.struct.stats_manager import StatsManager
 from src.view.action import Action
 
 
@@ -22,6 +24,13 @@ class App:
     def create_table_component(data: pd.DataFrame):
         st.write(data)
 
+    @staticmethod
+    def create_stats_component(data: pd.DataFrame):
+        min = StatsManager.min(data, "age")
+        max = StatsManager.max(data, "age")
+        avg = StatsManager.average(data, "age")
+        st.write(f"Min: {min}, Max: {max}, Avg: {round(avg,2)}")
+
     def run(self):
         st.title(self.title)
         self.create_home_component()
@@ -29,6 +38,7 @@ class App:
         if data:
             file_type, data = data
             self.create_table_component(data)
+            self.create_stats_component(data)
 
 
 if __name__ == "__main__":
