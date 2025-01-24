@@ -22,3 +22,28 @@ class Action:
                         f"data/{file_path}", file_extension
                     )
         return None
+
+    @staticmethod
+    def apply_filter(key: str, filter_input, button):
+        if "uploaded_data" in st.session_state:
+            data = st.session_state["uploaded_data"]
+
+            # Vérifier si la colonne 'name' existe dans le DataFrame
+            if key in data.columns:
+                # Créer un champ de texte pour filtrer les valeurs de la colonne 'name'
+
+                # Bouton pour appliquer le filtre
+                if button:
+                    if filter_input:
+                        # Appliquer le filtre
+                        filtered_data = data[
+                            data[key].str.contains(filter_input, case=False, na=False)
+                        ]
+                    else:
+                        # Si aucun filtre, afficher les données non filtrées
+                        filtered_data = data
+
+                    # Afficher les données filtrées
+                    st.write(filtered_data)
+            else:
+                st.write("The 'name' column is not present in the dataset.")
