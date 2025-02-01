@@ -56,6 +56,7 @@ products = {
 # Liste des produits disponibles
 product_names = list(products.keys())
 
+
 class Main:
     def __init__(self):
         self.extension: str = sys.argv[1]
