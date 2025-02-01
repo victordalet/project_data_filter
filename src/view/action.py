@@ -1,8 +1,6 @@
 from typing import Tuple, Optional
-
 import pandas as pd
 import streamlit as st
-
 from src.struct.data_manager import DataManager
 
 
@@ -24,26 +22,45 @@ class Action:
         return None
 
     @staticmethod
-    def apply_filter(key: str, filter_input, button):
-        if "uploaded_data" in st.session_state:
-            data = st.session_state["uploaded_data"]
+    def save_data(data: pd.DataFrame, file_name: str, file_format: str):
+        """
+        Sauvegarde les données dans un fichier au format spécifié.
+        """
+        if file_format == "csv":
+            data.to_csv(file_name, index=False)
+        elif file_format == "json":
+            data.to_json(file_name, orient="records")
+        elif file_format == "xml":
+            data.to_xml(file_name, index=False)
+        elif file_format == "yaml":
+            with open(file_name, "w") as f:
+                f.write(data.to_yaml())
+        st.success(f"Data saved successfully as {file_name}!")
 
-            # Vérifier si la colonne 'name' existe dans le DataFrame
-            if key in data.columns:
-                # Créer un champ de texte pour filtrer les valeurs de la colonne 'name'
+    @staticmethod
+    def sort_data(data: pd.DataFrame, key: str, ascending: bool = True) -> pd.DataFrame:
+        """
+        Trie les dataset en fonction d'une clé.
+        """
+        if key in data.columns:
+            return data.sort_values(by=key, ascending=ascending)
+        st.warning(f"The column '{key}' is not present in the dataset.")
+        return data
 
-                # Bouton pour appliquer le filtre
-                if button:
-                    if filter_input:
-                        # Appliquer le filtre
-                        filtered_data = data[
-                            data[key].str.contains(filter_input, case=False, na=False)
-                        ]
-                    else:
-                        # Si aucun filtre, afficher les données non filtrées
-                        filtered_data = data
-
-                    # Afficher les données filtrées
-                    st.write(filtered_data)
+    @staticmethod
+    def apply_filter(data: pd.DataFrame, filters: list[dict[str, str]]) -> pd.DataFrame:
+        """
+        Applique un filtre sur les données en fonction de plusieurs colonnes et valeurs.
+        """
+        filtered_data = data.copy()
+        for filter in filters:
+            column, value = filter["column"], filter["value"]
+            if column in filtered_data.columns:
+                filtered_data = filtered_data[
+                    filtered_data[column]
+                    .astype(str)
+                    .str.contains(value, case=False, na=False)
+                ]
             else:
-                st.write("The 'name' column is not present in the dataset.")
+                st.warning(f"The column '{column}' is not present in the dataset.")
+        return filtered_data
