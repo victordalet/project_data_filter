@@ -65,6 +65,7 @@ class App:
             if st.session_state.uploaded_data is not None:
                 data = st.session_state.uploaded_data
                 filtered_data = Action.apply_filter(data, filters)
+                st.session_state["filtered_data"] = filtered_data
                 st.write("### Filtered Data")
                 st.write(filtered_data)
 
@@ -94,7 +95,7 @@ class App:
         if st.sidebar.button("Save Data"):
             if st.session_state.uploaded_data is not None:
                 Action.save_data(
-                    st.session_state.uploaded_data,
+                    st.session_state["filtered_data"],
                     f"{file_name}.{file_format}",
                     file_format,
                 )
