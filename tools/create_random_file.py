@@ -6,10 +6,54 @@ import json
 import yaml
 import xml.etree.cElementTree as ET
 
-import names
-
 from src.struct.structur_def import Student, Item
 
+# Définition des produits, catégories et plages de prix
+products = {
+    "Laptop": {
+        "category": "Computers",
+        "price_range": (500, 2000),
+    },
+    "Smartphone": {
+        "category": "Electronics",
+        "price_range": (100, 1500),
+    },
+    "Tablet": {
+        "category": "Electronics",
+        "price_range": (150, 1200),
+    },
+    "Headphones": {
+        "category": "Accessories",
+        "price_range": (20, 500),
+    },
+    "Smartwatch": {
+        "category": "Accessories",
+        "price_range": (50, 1000),
+    },
+    "Camera": {
+        "category": "Photography",
+        "price_range": (100, 3000),
+    },
+    "Keyboard": {
+        "category": "Accessories",
+        "price_range": (10, 200),
+    },
+    "Mouse": {
+        "category": "Accessories",
+        "price_range": (5, 150),
+    },
+    "Monitor": {
+        "category": "Computers",
+        "price_range": (100, 1000),
+    },
+    "Charger": {
+        "category": "Accessories",
+        "price_range": (10, 100),
+    },
+}
+
+# Liste des produits disponibles
+product_names = list(products.keys())
 
 class Main:
     def __init__(self):
@@ -35,11 +79,14 @@ class Main:
     def create_random_item_data(self) -> List[Item]:
         item_list = []
         for _ in range(self.size):
+            product_name = random.choice(product_names)
+            product_info = products[product_name]
             item_list.append(
                 Item(
-                    name=names.get_first_name(),
-                    category=names.get_last_name(),
-                    price=random.uniform(1, 100),
+                    name=product_name,
+                    category=product_info["category"],
+                    # Génération du prix dans la plage spécifique au produit et arrondi à 2 décimales
+                    price=round(random.uniform(*product_info["price_range"]), 2),
                     quantity=random.randint(1, 100),
                 )
             )
