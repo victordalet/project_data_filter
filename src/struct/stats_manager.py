@@ -26,5 +26,8 @@ class StatsManager:
     @staticmethod
     def list_stats(data: pd.DataFrame, key: str) -> dict[str, float]:
         list_lengths = data[key].apply(len)
-        return {'min_length': list_lengths.min(), 'max_length': list_lengths.max(),
-                'average_length': list_lengths.mean()}
+        return {
+            "min_length": list_lengths.min(),
+            "max_length": list_lengths.max(),
+            "average_length": list_lengths.mean(),
+        }
