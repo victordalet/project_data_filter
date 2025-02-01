@@ -37,6 +37,27 @@ class App:
             unsafe_allow_html=True,
         )
 
+        filters = []
+        for i in range(num_filters):
+            st.sidebar.write(f"### Filter {i + 1}")
+            column = st.sidebar.selectbox(
+                f"Select column {i + 1}",
+                ["name", "quantity", "price", "category"],
+                key=f"column_{i}",
+            )
+            value = st.sidebar.text_input(
+                f"Enter filter value {i + 1}", key=f"value_{i}"
+            )
+            filters.append({"column": column, "value": value})
+
+        if st.sidebar.button("Apply Filters"):
+            if st.session_state.uploaded_data is not None:
+                data = st.session_state.uploaded_data
+                filtered_data = Action.apply_filter(data, filters)
+                st.session_state["filtered_data"] = filtered_data
+                st.write("### Filtered Data")
+                st.write(filtered_data)
+
     @staticmethod
     def create_pie_chart(labels, values, colors, title):
         """Crée un pie chart pour afficher des proportions."""
@@ -55,6 +76,21 @@ class App:
     def create_student_stats_component(self, data: pd.DataFrame):
         """Crée le composant pour afficher les statistiques des étudiants."""
         st.markdown("### Statistiques pour les étudiants")
+
+    @staticmethod
+    def create_save_component():
+        st.sidebar.header("Save Data")
+        file_name = st.sidebar.text_input("Enter file name", "data_output")
+        file_format = st.sidebar.selectbox(
+            "Select file format", ["csv", "json", "xml", "yaml"]
+        )
+        if st.sidebar.button("Save Data"):
+            if st.session_state.uploaded_data is not None:
+                Action.save_data(
+                    st.session_state["filtered_data"],
+                    f"{file_name}.{file_format}",
+                    file_format,
+                )
 
         # Calcul des statistiques
         min_age = StatsManager.min(data, "age")
