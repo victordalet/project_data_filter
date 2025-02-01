@@ -5,8 +5,9 @@ import csv
 import json
 import yaml
 import xml.etree.cElementTree as ET
-
+import names
 from src.struct.structur_def import Student, Item
+
 
 # Définition des produits, catégories et plages de prix
 products = {
