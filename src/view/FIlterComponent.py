@@ -3,6 +3,7 @@ from typing import Dict, List, Union
 import streamlit as st
 
 from src.struct.structur_def import FilterType
+from src.view.ChartComponent import ChartComponent
 from src.view.action import Action
 
 
@@ -23,9 +24,11 @@ class FilterComponent:
             )
             column = st.sidebar.selectbox(
                 f"Select column {i + 1}",
-                st.session_state.uploaded_data.columns
-                if "uploaded_data" in st.session_state
-                else [],
+                (
+                    st.session_state.uploaded_data.columns
+                    if "uploaded_data" in st.session_state
+                    else []
+                ),
                 key=f"column_{i}",
             )
             value = st.sidebar.text_input(
@@ -33,14 +36,36 @@ class FilterComponent:
             )
             filters.append({"column": column, "value": value, "type": filter_type})
 
+        if "filtered_datasets" not in st.session_state:
+            st.session_state["filtered_datasets"] = []
+
         if st.sidebar.button("Apply Filters"):
             if st.session_state.uploaded_data is not None:
                 data = st.session_state.uploaded_data
                 filtered_data = Action.apply_filter(data, filters)
+                st.session_state["filtered_datasets"].append(filtered_data)
                 st.session_state["filtered_data"] = filtered_data
-                st.session_state["filter_history"].append(filtered_data)
                 st.write("### Filtered Data")
-                st.write(filtered_data)
+
+                if len(filtered_data) == 0:
+                    st.write("No data found.")
+                else:
+                    st.write(filtered_data)
+                    ChartComponent.create_stats_component(filtered_data)
+
+        else:
+            if "uploaded_data" in st.session_state:
+                data = st.session_state.uploaded_data
+                if data is not None:
+                    st.write(data)
+                    ChartComponent.create_stats_component(data)
+
+        st.sidebar.header("Previous Filtered Data")
+        for idx, dataset in enumerate(st.session_state["filtered_datasets"]):
+            if st.sidebar.button(f"Show Filtered Data {idx + 1}"):
+                st.write(f"### Filtered Data {idx + 1}")
+                st.write(dataset)
+                ChartComponent.create_stats_component(dataset)
 
     @staticmethod
     def create_save_component():
@@ -56,10 +81,3 @@ class FilterComponent:
                     f"{file_name}.{file_format}",
                     file_format,
                 )
-
-    @staticmethod
-    def create_table_history_filter():
-        for i, f_data in enumerate(st.session_state["filter_history"]):
-            if st.button(f"Apply Filter -{i + 1}"):
-                st.session_state["filtered_data"] = f_data
-                st.write(f_data)
