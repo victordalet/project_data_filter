@@ -45,6 +45,25 @@ class ChartComponent:
                 labels, values, colors, "Répartition des apprentis"
             )
 
+        data["mean"] = data["grades"].apply(lambda x: sum(x) / len(x))
+        ChartComponent.create_bar_chart(
+            data["age"].unique().tolist(),
+            data.groupby("age")["mean"].mean().tolist(),
+            "Moyenne des notes par âge",
+            "Âge",
+            "Moyenne des notes",
+        )
+        ChartComponent.create_bar_chart(
+            ["Apprenti", "Non apprenti"],
+            [
+                data[data["apprentice"] == True]["mean"].mean(),
+                data[data["apprentice"] == False]["mean"].mean(),
+            ],
+            "Moyenne des notes par apprentissage",
+            "Apprentissage",
+            "Moyenne des notes",
+        )
+
     @staticmethod
     def create_item_stats_component(data: pd.DataFrame):
         """Crée le composant pour afficher les statistiques des articles."""
@@ -77,6 +96,14 @@ class ChartComponent:
             ChartComponent.create_pie_chart(
                 labels, values, colors, "Répartition des catégories"
             )
+
+        ChartComponent.create_bar_chart(
+            data["category"].unique().tolist(),
+            data.groupby("category")["price"].mean().tolist(),
+            "Moyenne des prix par catégorie",
+            "Catégorie",
+            "Moyenne des prix",
+        )
 
     @staticmethod
     def create_pie_chart(

@@ -23,9 +23,11 @@ class FilterComponent:
             )
             column = st.sidebar.selectbox(
                 f"Select column {i + 1}",
-                st.session_state.uploaded_data.columns
-                if "uploaded_data" in st.session_state
-                else [],
+                (
+                    st.session_state.uploaded_data.columns
+                    if "uploaded_data" in st.session_state
+                    else []
+                ),
                 key=f"column_{i}",
             )
             value = st.sidebar.text_input(
