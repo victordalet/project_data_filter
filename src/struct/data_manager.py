@@ -28,3 +28,21 @@ class DataManager:
         with open(file_path, "r") as file:
             data = yaml.safe_load(file)
         return pd.DataFrame(data)
+
+    @staticmethod
+    def save_data(data: pd.DataFrame, file_name: str, file_format: str):
+        match file_format:
+            case "csv":
+                data.to_csv(file_name, index=False)
+            case "json":
+                data.to_json(file_name, orient="records")
+            case "xml":
+                if "grades" in data.columns:
+                    data["grades"] = data["grades"].apply(str)
+                data.to_xml(file_name)
+            case "yaml":
+                data_dict = data.to_dict(orient="records")
+                with open(file_name, "w") as file:
+                    yaml.dump(data_dict, file)
+            case _:
+                raise ValueError(f"Unsupported file format: {file_format}")

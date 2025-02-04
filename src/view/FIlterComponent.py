@@ -3,6 +3,7 @@ from typing import Dict, List, Union
 import streamlit as st
 
 from src.struct.structur_def import FilterType
+from src.view.ChartComponent import ChartComponent
 from src.view.action import Action
 
 
@@ -42,7 +43,19 @@ class FilterComponent:
                 st.session_state["filtered_data"] = filtered_data
                 st.session_state["filter_history"].append(filtered_data)
                 st.write("### Filtered Data")
-                st.write(filtered_data)
+
+                if len(filtered_data) == 0:
+                    st.write("No data found.")
+                else:
+                    st.write(filtered_data)
+                    ChartComponent.create_stats_component(filtered_data)
+
+        else:
+            if "uploaded_data" in st.session_state:
+                data = st.session_state.uploaded_data
+                if data is not None:
+                    st.write(data)
+                    ChartComponent.create_stats_component(data)
 
     @staticmethod
     def create_save_component():
@@ -61,7 +74,8 @@ class FilterComponent:
 
     @staticmethod
     def create_table_history_filter():
-        for i, f_data in enumerate(st.session_state["filter_history"]):
-            if st.button(f"Apply Filter -{i + 1}"):
-                st.session_state["filtered_data"] = f_data
-                st.write(f_data)
+        if "filter_history" in st.session_state:
+            for i, f_data in enumerate(st.session_state["filter_history"]):
+                if st.button(f"Apply Filter -{i + 1}"):
+                    st.session_state["filtered_data"] = f_data
+                    st.write(f_data)

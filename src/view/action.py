@@ -28,15 +28,7 @@ class Action:
         """
         Sauvegarde les données dans un fichier au format spécifié.
         """
-        if file_format == "csv":
-            data.to_csv(file_name, index=False)
-        elif file_format == "json":
-            data.to_json(file_name, orient="records")
-        elif file_format == "xml":
-            data.to_xml(file_name, index=False)
-        elif file_format == "yaml":
-            with open(file_name, "w") as f:
-                f.write(data.to_yaml())
+        DataManager.save_data(data, file_name, file_format)
         st.success(f"Data saved successfully as {file_name}!")
 
     @staticmethod
