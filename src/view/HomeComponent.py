@@ -19,5 +19,4 @@ class HomeComponent:
         )
         FilterComponent.display_filter_bar()
         FilterComponent.create_save_component()
-        FilterComponent.create_table_history_filter()
         return file_uploader

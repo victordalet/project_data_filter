@@ -36,12 +36,15 @@ class FilterComponent:
             )
             filters.append({"column": column, "value": value, "type": filter_type})
 
+        if "filtered_datasets" not in st.session_state:
+            st.session_state["filtered_datasets"] = []
+
         if st.sidebar.button("Apply Filters"):
             if st.session_state.uploaded_data is not None:
                 data = st.session_state.uploaded_data
                 filtered_data = Action.apply_filter(data, filters)
+                st.session_state["filtered_datasets"].append(filtered_data)
                 st.session_state["filtered_data"] = filtered_data
-                st.session_state["filter_history"].append(filtered_data)
                 st.write("### Filtered Data")
 
                 if len(filtered_data) == 0:
@@ -57,6 +60,13 @@ class FilterComponent:
                     st.write(data)
                     ChartComponent.create_stats_component(data)
 
+        st.sidebar.header("Previous Filtered Data")
+        for idx, dataset in enumerate(st.session_state["filtered_datasets"]):
+            if st.sidebar.button(f"Show Filtered Data {idx + 1}"):
+                st.write(f"### Filtered Data {idx + 1}")
+                st.write(dataset)
+                ChartComponent.create_stats_component(dataset)
+
     @staticmethod
     def create_save_component():
         st.sidebar.header("Save Data")
@@ -71,11 +81,3 @@ class FilterComponent:
                     f"{file_name}.{file_format}",
                     file_format,
                 )
-
-    @staticmethod
-    def create_table_history_filter():
-        if "filter_history" in st.session_state:
-            for i, f_data in enumerate(st.session_state["filter_history"]):
-                if st.button(f"Apply Filter -{i + 1}"):
-                    st.session_state["filtered_data"] = f_data
-                    st.write(f_data)
