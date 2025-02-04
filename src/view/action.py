@@ -1,7 +1,9 @@
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Dict, List, Union
 import pandas as pd
 import streamlit as st
 from src.struct.data_manager import DataManager
+from src.struct.filter_manager import FilterManager
+from src.struct.structur_def import FilterType
 
 
 class Action:
@@ -48,19 +50,39 @@ class Action:
         return data
 
     @staticmethod
-    def apply_filter(data: pd.DataFrame, filters: list[dict[str, str]]) -> pd.DataFrame:
+    def apply_filter(
+        data: pd.DataFrame, filters: List[Dict[str, Union[str, FilterType]]]
+    ) -> pd.DataFrame:
         """
         Applique un filtre sur les données en fonction de plusieurs colonnes et valeurs.
         """
         filtered_data = data.copy()
         for filter in filters:
-            column, value = filter["column"], filter["value"]
+            column, value, filter_type = (
+                filter["column"],
+                filter["value"],
+                filter["type"],
+            )
             if column in filtered_data.columns:
-                filtered_data = filtered_data[
-                    filtered_data[column]
-                    .astype(str)
-                    .str.contains(value, case=False, na=False)
-                ]
+                match filter_type:
+                    case FilterType.CONTAINS:
+                        filtered_data = FilterManager.contains(
+                            filtered_data, column, value
+                        )
+                    case FilterType.EQUALS:
+                        filtered_data = FilterManager.equals(
+                            filtered_data, column, value
+                        )
+                    case FilterType.STARTS_WITH:
+                        filtered_data = FilterManager.start_with(
+                            filtered_data, column, value
+                        )
+                    case FilterType.FINISH_WITH:
+                        filtered_data = FilterManager.finish_with(
+                            filtered_data, column, value
+                        )
+                    case _:
+                        st.warning(f"Unsupported filter type: {filter_type}")
             else:
                 st.warning(f"The column '{column}' is not present in the dataset.")
         return filtered_data
