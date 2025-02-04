@@ -1,9 +1,10 @@
+from typing import List
+
 import streamlit as st
 import pandas as pd
 from matplotlib import pyplot as plt
 
 from src.struct.stats_manager import StatsManager
-from src.view.action import Action
 
 
 class ChartComponent:
@@ -78,7 +79,9 @@ class ChartComponent:
             )
 
     @staticmethod
-    def create_pie_chart(labels, values, colors, title):
+    def create_pie_chart(
+        labels: List[str], values: List[float], colors: List[str], title: str
+    ):
         fig, ax = plt.subplots()
         ax.pie(
             values,
@@ -88,6 +91,17 @@ class ChartComponent:
             startangle=90,
             wedgeprops={"edgecolor": "black"},
         )
+        ax.set_title(title)
+        st.pyplot(fig)
+
+    @staticmethod
+    def create_bar_chart(
+        labels: List[str], values: List[float], title: str, x_label: str, y_label: str
+    ):
+        fig, ax = plt.subplots()
+        ax.bar(labels, values)
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
         ax.set_title(title)
         st.pyplot(fig)
 

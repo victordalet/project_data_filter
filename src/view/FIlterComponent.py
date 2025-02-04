@@ -1,5 +1,8 @@
+from typing import Dict, List, Union
+
 import streamlit as st
 
+from src.struct.structur_def import FilterType
 from src.view.action import Action
 
 
@@ -8,26 +11,34 @@ class FilterComponent:
     def display_filter_bar():
         st.sidebar.header("Filters")
         num_filters = st.sidebar.number_input(
-            "Number of filters", min_value=1, max_value=10, value=1
+            "Number of filters", min_value=0, max_value=10, value=0
         )
-        filters = []
+        filters: List[Dict[str, Union[str, FilterType]]] = []
         for i in range(num_filters):
             st.sidebar.write(f"### Filter {i + 1}")
+            filter_type = st.sidebar.selectbox(
+                f"Select filter type {i + 1}",
+                [f.value for f in FilterType],
+                key=f"type_{i}",
+            )
             column = st.sidebar.selectbox(
                 f"Select column {i + 1}",
-                ["name", "quantity", "price", "category"],
+                st.session_state.uploaded_data.columns
+                if "uploaded_data" in st.session_state
+                else [],
                 key=f"column_{i}",
             )
             value = st.sidebar.text_input(
                 f"Enter filter value {i + 1}", key=f"value_{i}"
             )
-            filters.append({"column": column, "value": value})
+            filters.append({"column": column, "value": value, "type": filter_type})
 
         if st.sidebar.button("Apply Filters"):
             if st.session_state.uploaded_data is not None:
                 data = st.session_state.uploaded_data
                 filtered_data = Action.apply_filter(data, filters)
                 st.session_state["filtered_data"] = filtered_data
+                st.session_state["filter_history"].append(filtered_data)
                 st.write("### Filtered Data")
                 st.write(filtered_data)
 
@@ -45,3 +56,10 @@ class FilterComponent:
                     f"{file_name}.{file_format}",
                     file_format,
                 )
+
+    @staticmethod
+    def create_table_history_filter():
+        for i, f_data in enumerate(st.session_state["filter_history"]):
+            if st.button(f"Apply Filter -{i + 1}"):
+                st.session_state["filtered_data"] = f_data
+                st.write(f_data)
