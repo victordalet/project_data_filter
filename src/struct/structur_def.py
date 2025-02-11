@@ -24,3 +24,5 @@ class FilterType(str, Enum):
     EQUALS = "equals"
     STARTS_WITH = "starts_with"
     FINISH_WITH = "finish_with"
+    IS_BELOW = "is_below"
+    IS_ABOVE = "is_above"

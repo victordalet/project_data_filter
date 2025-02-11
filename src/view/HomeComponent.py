@@ -7,7 +7,7 @@ from src.view.FIlterComponent import FilterComponent
 class HomeComponent:
     @staticmethod
     def create_table_component(data: pd.DataFrame):
-        st.write(data)
+        st.data_editor(data)
 
     @staticmethod
     def create_home_component(title: str = "Data Filter"):

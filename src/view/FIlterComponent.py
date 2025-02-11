@@ -63,7 +63,8 @@ class FilterComponent:
         st.sidebar.header("Previous Filtered Data")
         for idx, dataset in enumerate(st.session_state["filtered_datasets"]):
             if st.sidebar.button(f"Show Filtered Data {idx + 1}"):
-                st.write(f"### Filtered Data {idx + 1}")
+                st.session_state["filtered_data"] = dataset
+                st.write("### Filtered Data")
                 st.write(dataset)
                 ChartComponent.create_stats_component(dataset)
 
