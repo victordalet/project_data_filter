@@ -17,6 +17,16 @@ export PYTHONPATH=$(pwd)/src:$(pwd)
 python src/main.py
 ```
 
+### Active chat bot
+
+You need to install lamma and download the model
+- `curl -fsSL https://ollama.com/install.sh | sh`
+- `ollama run llama3.1:8b`
+
+```
+export ACTIVE_CHAT_BOT=True
+```
+
 ## Run with docker
 
 ```bash
