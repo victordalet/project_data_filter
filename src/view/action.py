@@ -45,9 +45,6 @@ class Action:
     def apply_filter(
         data: pd.DataFrame, filters: List[Dict[str, Union[str, FilterType]]]
     ) -> pd.DataFrame:
-        """
-        Applique un filtre sur les données en fonction de plusieurs colonnes et valeurs.
-        """
         filtered_data = data.copy()
         for filter in filters:
             column, value, filter_type = (
@@ -58,21 +55,44 @@ class Action:
             if column in filtered_data.columns:
                 match filter_type:
                     case FilterType.CONTAINS:
-                        filtered_data = FilterManager.contains(
-                            filtered_data, column, value
-                        )
+                        try:
+                            filtered_data = FilterManager.contains(
+                                filtered_data, column, value
+                            )
+                        except ValueError:
+                            st.warning("Please enter a valid string.")
                     case FilterType.EQUALS:
                         filtered_data = FilterManager.equals(
                             filtered_data, column, value
                         )
                     case FilterType.STARTS_WITH:
-                        filtered_data = FilterManager.start_with(
-                            filtered_data, column, value
-                        )
+                        try:
+                            filtered_data = FilterManager.start_with(
+                                filtered_data, column, value
+                            )
+                        except ValueError:
+                            st.warning("Please enter a valid string.")
                     case FilterType.FINISH_WITH:
-                        filtered_data = FilterManager.finish_with(
-                            filtered_data, column, value
-                        )
+                        try:
+                            filtered_data = FilterManager.finish_with(
+                                filtered_data, column, value
+                            )
+                        except ValueError:
+                            st.warning("Please enter a valid string.")
+                    case FilterType.IS_BELOW:
+                        try:
+                            filtered_data = FilterManager.is_below(
+                                filtered_data, column, int(value)
+                            )
+                        except ValueError:
+                            st.warning("Please enter a valid number.")
+                    case FilterType.IS_ABOVE:
+                        try:
+                            filtered_data = FilterManager.is_above(
+                                filtered_data, column, int(value)
+                            )
+                        except ValueError:
+                            st.warning("Please enter a valid number.")
                     case _:
                         st.warning(f"Unsupported filter type: {filter_type}")
             else:
