@@ -5,3 +5,6 @@ names==0.3.0
 PyYAML==6.0.2
 matplotlib==3.10.0
 lxml==5.3.0
+ollama==0.4.7
+llama-index==0.12.17
+llama-index-llms-ollama==0.5.2
