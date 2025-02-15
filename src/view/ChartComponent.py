@@ -98,7 +98,7 @@ class ChartComponent:
             "#F44336",
             "#2196F3",
             "#FF9800",
-        ]  # Couleurs pour les catégories
+        ]
         ChartComponent.create_pie_chart(
             labels, values, colors, "Répartition des catégories"
         )

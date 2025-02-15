@@ -25,17 +25,11 @@ class Action:
 
     @staticmethod
     def save_data(data: pd.DataFrame, file_name: str, file_format: str):
-        """
-        Sauvegarde les données dans un fichier au format spécifié.
-        """
         DataManager.save_data(data, file_name, file_format)
         st.success(f"Data saved successfully as {file_name}!")
 
     @staticmethod
     def sort_data(data: pd.DataFrame, key: str, ascending: bool = True) -> pd.DataFrame:
-        """
-        Trie les dataset en fonction d'une clé.
-        """
         if key in data.columns:
             return data.sort_values(by=key, ascending=ascending)
         st.warning(f"The column '{key}' is not present in the dataset.")
