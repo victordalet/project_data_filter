@@ -8,7 +8,6 @@ import xml.etree.cElementTree as ET
 import names
 from src.struct.structur_def import Student, Item
 
-# Définition des produits, catégories et plages de prix
 products = {
     "Laptop": {
         "category": "Computers",
@@ -52,7 +51,6 @@ products = {
     },
 }
 
-# Liste des produits disponibles
 product_names = list(products.keys())
 
 
@@ -86,7 +84,6 @@ class Main:
                 Item(
                     name=product_name,
                     category=product_info["category"],
-                    # Génération du prix dans la plage spécifique au produit et arrondi à 2 décimales
                     price=round(random.uniform(*product_info["price_range"]), 2),
                     quantity=random.randint(1, 100),
                 )

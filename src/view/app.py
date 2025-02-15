@@ -2,7 +2,6 @@ import os
 
 import streamlit as st
 
-from src.struct.data_manager import DataManager
 from src.view.ChartComponent import ChartComponent
 from src.view.HomeComponent import HomeComponent
 from src.view.ChatComponent import ChatComponent
