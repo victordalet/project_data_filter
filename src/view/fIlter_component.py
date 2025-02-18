@@ -3,7 +3,7 @@ from typing import Dict, List, Union
 import streamlit as st
 
 from src.struct.structur_def import FilterType
-from src.view.ChartComponent import ChartComponent
+from src.view.chart_component import ChartComponent
 from src.view.action import Action
 
 

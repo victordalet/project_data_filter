@@ -2,9 +2,9 @@ import os
 
 import streamlit as st
 
-from src.view.ChartComponent import ChartComponent
-from src.view.HomeComponent import HomeComponent
-from src.view.ChatComponent import ChatComponent
+from src.view.chart_component import ChartComponent
+from src.view.home_component import HomeComponent
+from src.view.chat_component import ChatComponent
 from src.view.action import Action
 
 
@@ -29,7 +29,7 @@ class App:
             HomeComponent.create_table_component(data)
             ChartComponent.create_stats_component(data)
         if os.getenv("ACTIVE_CHAT_BOT") == "True":
-            ChatComponent.display_chat("llama3.1:8b")
+            ChatComponent.display_chat("llama3.2")
 
 
 if __name__ == "__main__":

@@ -86,7 +86,6 @@ class ChartComponent:
 
     @staticmethod
     def create_item_stats_component(data: pd.DataFrame):
-        """Crée le composant pour afficher les statistiques des articles."""
         st.markdown("### Statistiques pour les articles")
 
         st.markdown("#### Répartition des catégories")
