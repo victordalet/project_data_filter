@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-from src.view.FIlterComponent import FilterComponent
+from src.view.fIlter_component import FilterComponent
 
 
 class HomeComponent:
